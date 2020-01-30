@@ -27,25 +27,25 @@ public class User implements Comparable {
         return conversationPerUser;
     }
 
-    public void setConversationPerUser(Map<User, Conversation> conversationPerUser) {
-        this.conversationPerUser = conversationPerUser;
+    public void updateConversationWithUser(User user, Conversation conversation) {
+        this.conversationPerUser.put(user, conversation);
     }
 
     Conversation getUserConversation(User user) {
-        return conversationPerUser.get(user);
+        return this.conversationPerUser.get(user);
     }
 
     void sendAMessage(User destination, String text) throws Exception {
         if (status == Status.ONLINE) {
             Message message = new Message(text);
-            Conversation conversation = conversationPerUser.get(destination);
+            Conversation conversation = this.conversationPerUser.get(destination);
             boolean isAdded = false;
             if (conversation == null) {
                 conversation = new Conversation();
                 conversationPerUser.put(destination, conversation);
             }
             isAdded = conversation.addMessage(new Pair<User, Message>(destination, message));
-
+            destination.updateConversationWithUser(this, conversation);
             if (!isAdded) {
                 throw new Exception("ERROR : Message not sent");
             }
@@ -63,11 +63,11 @@ public class User implements Comparable {
     }
 
     void connect() {
-        status = Status.ONLINE;
+        this.status = Status.ONLINE;
     }
 
     void disconnect() {
-        status = Status.OFFLINE;
+        this.status = Status.OFFLINE;
     }
 
     @Override

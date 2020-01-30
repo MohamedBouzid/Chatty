@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserTest {
@@ -23,7 +24,7 @@ class UserTest {
     }
 
     @Test
-    void sendAMessage() {
+    void user1sendAMessageToUser2() {
         String testMessage = "hello user2 !";
         user1.connect();
         try {
@@ -31,9 +32,13 @@ class UserTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Conversation conversation = user1.getUserConversation(user2);
-        Message message = conversation.getMessageAt(0);
-        assertEquals(message.compareText(testMessage), 0);
+        Conversation conversation12 = user1.getUserConversation(user2);
+        Message message12 = conversation12.getMessageAt(0);
+        assertEquals(message12.compareText(testMessage), 0);
+        Conversation conversation21 = user2.getUserConversation(user1);
+        assertNotNull(conversation21);
+        Message message21 = conversation21.getMessageAt(0);
+        assertEquals(message21.compareText(testMessage), 0);
     }
 
     @Test
