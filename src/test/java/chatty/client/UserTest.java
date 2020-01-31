@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UserTest {
@@ -43,10 +44,10 @@ class UserTest {
 
     @Test
     void openConversation() {
-    }
-
-    @Test
-    void openConversations() {
+        Conversation conversation = user1.getUserConversation(user2);
+        assertNull(conversation);
+        conversation = user1.openConversation(user2);
+        assertNotNull(conversation);
     }
 
     @Test
@@ -55,5 +56,28 @@ class UserTest {
 
     @Test
     void disconnect() {
+    }
+
+    @Test
+    void deleteConversationWithUser() {
+        int size = user1.getConversationsSize();
+        assertEquals(size, 0);
+        try {
+            user1.sendAMessage(user2, "Hello user2 !");
+            user2.sendAMessage(user1, "Hello user1 !");
+            user1.sendAMessage(user2, "What's up ?");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        size = user1.getConversationsSize();
+        assertEquals(size, 1);
+        try {
+            user1.sendAMessage(user3, "Hello user3 !");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        size = user1.getConversationsSize();
+        assertEquals(size, 2);
+
     }
 }

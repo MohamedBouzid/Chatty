@@ -24,6 +24,7 @@ public class User implements Comparable {
     }
 
     public Map<User, Conversation> getConversationPerUser() {
+
         return conversationPerUser;
     }
 
@@ -54,12 +55,14 @@ public class User implements Comparable {
         }
     }
 
-    void openConversation(User user) {
-
+    Conversation openConversation(User user) {
+        Conversation conversation = new Conversation();
+        this.conversationPerUser.put(user, conversation);
+        return conversation;
     }
 
-    void openConversations() {
-
+    void deleteConversationWithUser(User user) {
+        this.conversationPerUser.remove(user);
     }
 
     void connect() {
@@ -108,6 +111,10 @@ public class User implements Comparable {
     public int compareTo(Object o) {
         User compareTo = (User) o;
         return pseudo.compareTo((compareTo.pseudo));
+    }
+
+    public int getConversationsSize() {
+        return this.conversationPerUser.size();
     }
 
     public enum Status {
